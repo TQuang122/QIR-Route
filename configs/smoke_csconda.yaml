@@ -1,0 +1,23 @@
+schema_version: 1
+experiment: stage0_csconda_smoke
+dataset:
+  name: CSConDa
+  path: upstream/ViRE/data/CSConDa.csv
+  sha256: 52af2ceecf76c1db3300fb8373073e7d65b6c4fc53fdb2f23ad26d770f4cab4f
+  license: CC-BY-NC-4.0
+  sample_size: 64
+  sample_seed: 42
+  prefer_unique_context: true
+model:
+  id: AITeamVN/Vietnamese_Embedding_v2
+  revision: 18b44161e041bf1d3a333ab5144b5b7b93f914d2
+  expected_dimension: 1024
+  max_sequence_length: 512
+  batch_size: 8
+  device: auto
+retrieval:
+  bm25_k1: 1.5
+  bm25_b: 0.75
+  dense_weight: 0.7
+  ks: [1, 3, 5, 10, 20, 50]
+output_root: artifacts/stage0

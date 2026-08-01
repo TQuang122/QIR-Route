@@ -1,0 +1,12 @@
+.DS_Store
+.codegraph
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+artifacts/
+cache/
+dist/
+upstream/ViRE/
+upstream/qiepsm/

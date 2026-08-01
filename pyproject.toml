@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "qir-route"
+version = "0.1.0"
+description = "Receipt-backed research code for cost-aware quantum-inspired Vietnamese retrieval"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "numpy>=1.26,<3",
+  "pandas>=2.2,<3",
+  "pyyaml>=6.0,<7",
+  "rank-bm25>=0.2.2,<0.3",
+  "sentence-transformers>=5.0,<6",
+  "torch>=2.7,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3,<9",
+]
+
+[project.scripts]
+qir = "qir_route.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qir_route"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.pyright]
+include = ["src", "tests"]
+extraPaths = ["upstream/ViRE/src"]
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"

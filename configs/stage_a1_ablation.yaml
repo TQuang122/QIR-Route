@@ -1,0 +1,37 @@
+schema_version: 1
+experiment: stage_a1_csconda_ablation
+dataset:
+  name: CSConDa
+  path: upstream/ViRE/data/CSConDa.csv
+  sha256: 52af2ceecf76c1db3300fb8373073e7d65b6c4fc53fdb2f23ad26d770f4cab4f
+  license: CC-BY-NC-4.0
+  sample_size: 128
+  split_seed: 20260731
+  train_fraction: 0.70
+  validation_fraction: 0.15
+model:
+  id: AITeamVN/Vietnamese_Embedding_v2
+  revision: 18b44161e041bf1d3a333ab5144b5b7b93f914d2
+  expected_dimension: 1024
+  max_sequence_length: 512
+  batch_size: 8
+  device: auto
+candidates:
+  top_k: 50
+  bm25_k1: 1.5
+  bm25_b: 0.75
+  dense_weight: 0.7
+  force_train_positive: true
+training:
+  seeds: [20260731, 20260732, 20260733]
+  aggregation: mean
+  temperature: 0.1
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  batch_size: 8
+  max_epochs: 5
+  patience: 2
+promotion:
+  ndcg_tolerance: 0.0
+  required_seed_count: 3
+output_root: artifacts/stage_a1
