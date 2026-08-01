@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "experiment": "post_stage_a2_diagnostics",
+  "diagnostic_only": true,
+  "stage_a2_run": "artifacts/stage_a2/20260801T094412Z-d5f23ea7",
+  "initial_snapshot_commit": "16eea5a77b99ebe3c1831a65949859c58ec2251c",
+  "frozen_receipts": {
+    "artifacts/stage_a/20260801T052953Z-51890358/stage_a_receipt.json": "7aea138f63e801cad50e0811eae0983c31976f743932e9bca370437cdb29b742",
+    "artifacts/stage_a1/20260801T091257Z-428e9775/stage_a1_receipt.json": "e23f991796d422e89df024916ff33e9d54bc9a3d282323bf155ef2048ddaa2aa",
+    "artifacts/stage_a2/20260801T094412Z-d5f23ea7/stage_a2_receipt.json": "61f63ce24b42e10dba537a42b46cb23efba745b1362ecf17ae8c0ed5be3e38c3"
+  },
+  "device": "auto",
+  "batch_size": 32,
+  "bootstrap": {
+    "replicates": 10000,
+    "confidence": 0.95,
+    "seed": 20260801
+  },
+  "minimum_stable_support": 100,
+  "required_consistent_seeds": 4,
+  "output_root": "artifacts/post_a2_diagnostics"
+}

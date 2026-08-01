@@ -5,6 +5,11 @@ import json
 from pathlib import Path
 
 from qir_route.baseline import run_smoke
+from qir_route.diagnostics import (
+    run_post_a2_diagnostics,
+    verify_test_firewall,
+    write_provenance_snapshot,
+)
 from qir_route.quantum.benchmark import benchmark_head
 from qir_route.stage_a import (
     run_stage_a1_ablation,
@@ -46,6 +51,22 @@ def build_parser() -> argparse.ArgumentParser:
         help="run full-corpus five-seed confirmation with paired bootstrap gates",
     )
     stage_a2.add_argument("--config", type=Path, required=True)
+    diagnostics = subparsers.add_parser(
+        "diagnose-stage-a2",
+        help="run diagnostic-only analysis over frozen train/validation exports",
+    )
+    diagnostics.add_argument("--config", type=Path, required=True)
+    firewall = subparsers.add_parser(
+        "verify-test-firewall",
+        help="verify that the Stage A.2 test split remains assignment-only",
+    )
+    firewall.add_argument("--stage-a2-run", type=Path, required=True)
+    provenance = subparsers.add_parser(
+        "provenance-snapshot",
+        help="write a post-run source and frozen-receipt provenance receipt",
+    )
+    provenance.add_argument("--config", type=Path, required=True)
+    provenance.add_argument("--output", type=Path, required=True)
     return parser
 
 
@@ -73,6 +94,44 @@ def main() -> None:
     elif args.command == "stage-a2-confirm":
         run_dir = run_stage_a2_confirmation(args.config)
         print(run_dir)
+    elif args.command == "diagnose-stage-a2":
+        output_dir = run_post_a2_diagnostics(args.config)
+        print(output_dir)
+        receipt = json.loads(
+            (output_dir / "diagnostic_receipt.json").read_text(encoding="utf-8")
+        )
+        print(
+            json.dumps(
+                {
+                    "diagnostic_verdict": receipt["verdict"],
+                    "stable_qi_helpful_regime_exists": receipt[
+                        "stable_qi_regime_exists"
+                    ],
+                    "strongest_valid_slice": receipt["strongest_valid_slice"],
+                    "stage_a3_scientifically_justified": receipt[
+                        "stage_a3_scientifically_justified"
+                    ],
+                    "test_remained_untouched": receipt["test_remained_untouched"],
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+    elif args.command == "verify-test-firewall":
+        print(
+            json.dumps(
+                verify_test_firewall(args.stage_a2_run),
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+    elif args.command == "provenance-snapshot":
+        config_path = args.config.resolve()
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        receipt = write_provenance_snapshot(
+            config_path.parent.parent, config, args.output.resolve()
+        )
+        print(json.dumps(receipt, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

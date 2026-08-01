@@ -84,3 +84,22 @@ uv run qir stage-a2-confirm --config configs/stage_a2_confirmation.yaml
 The frozen recipe and promotion criteria are recorded in
 `outputs/stage_a2_recipe.md`. A failed promotion gate is retained as a valid
 negative result and does not trigger test evaluation.
+
+## Post-Stage-A.2 diagnostics
+
+The diagnostic namespace analyzes only frozen train/validation caches, receipts,
+per-query exports, and checkpoints. It cannot tune, retrain, promote, or inspect
+the sealed test split:
+
+```bash
+uv run qir verify-test-firewall \
+  --stage-a2-run artifacts/stage_a2/20260801T094412Z-d5f23ea7
+uv run qir provenance-snapshot \
+  --config configs/post_a2_diagnostics.json \
+  --output artifacts/post_a2_diagnostics/provenance_receipt.json
+uv run qir diagnose-stage-a2 --config configs/post_a2_diagnostics.json
+```
+
+Historical Stage A receipts and artifacts remain immutable. Diagnostic outputs
+are written below `artifacts/post_a2_diagnostics/` and explicitly state that they
+cannot authorize a Stage A.3 run.
