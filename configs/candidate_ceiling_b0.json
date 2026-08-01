@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "audit_revision": 1,
+  "experiment": "candidate_ceiling_b0",
+  "diagnostic_only": true,
+  "stage_a2_run": "artifacts/stage_a2/20260801T094412Z-d5f23ea7",
+  "frozen_receipts": {
+    "artifacts/stage_a/20260801T052953Z-51890358/stage_a_receipt.json": "7aea138f63e801cad50e0811eae0983c31976f743932e9bca370437cdb29b742",
+    "artifacts/stage_a1/20260801T091257Z-428e9775/stage_a1_receipt.json": "e23f991796d422e89df024916ff33e9d54bc9a3d282323bf155ef2048ddaa2aa",
+    "artifacts/stage_a2/20260801T094412Z-d5f23ea7/stage_a2_receipt.json": "61f63ce24b42e10dba537a42b46cb23efba745b1362ecf17ae8c0ed5be3e38c3"
+  },
+  "candidate_caches": {
+    "artifacts/stage_a2/20260801T094412Z-d5f23ea7/train_candidates.npz": "2dbd1ac1b669673ee67d786a6c85004007bbb2c3fa9309bc145846016a5247ed",
+    "artifacts/stage_a2/20260801T094412Z-d5f23ea7/validation_candidates.npz": "0d22daeccf635931e883b9df217241e8c76b9927894cc16031fb742cfdf11b49"
+  },
+  "candidate_manifests": {
+    "train": "artifacts/stage_a2/20260801T094412Z-d5f23ea7/train_candidates.manifest.json",
+    "validation": "artifacts/stage_a2/20260801T094412Z-d5f23ea7/validation_candidates.manifest.json"
+  },
+  "bootstrap": {
+    "replicates": 10000,
+    "confidence": 0.95,
+    "seed": 20260801
+  },
+  "minimum_slice_support": 100,
+  "output_root": "artifacts/candidate_ceiling_b0"
+}

@@ -11,6 +11,7 @@ from qir_route.diagnostics import (
     write_provenance_snapshot,
 )
 from qir_route.quantum.benchmark import benchmark_head
+from qir_route.retrieval_diagnostics import run_candidate_ceiling_audit
 from qir_route.stage_a import (
     run_stage_a1_ablation,
     run_stage_a2_confirmation,
@@ -56,6 +57,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="run diagnostic-only analysis over frozen train/validation exports",
     )
     diagnostics.add_argument("--config", type=Path, required=True)
+    candidate_ceiling = subparsers.add_parser(
+        "audit-candidate-ceiling",
+        help="audit fixed candidate-ceiling recovery strategies on frozen validation embeddings",
+    )
+    candidate_ceiling.add_argument("--config", type=Path, required=True)
     firewall = subparsers.add_parser(
         "verify-test-firewall",
         help="verify that the Stage A.2 test split remains assignment-only",
@@ -111,6 +117,29 @@ def main() -> None:
                     "stage_a3_scientifically_justified": receipt[
                         "stage_a3_scientifically_justified"
                     ],
+                    "test_remained_untouched": receipt["test_remained_untouched"],
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+    elif args.command == "audit-candidate-ceiling":
+        output_dir = run_candidate_ceiling_audit(args.config)
+        print(output_dir)
+        receipt = json.loads(
+            (output_dir / "candidate_ceiling_receipt.json").read_text(encoding="utf-8")
+        )
+        print(
+            json.dumps(
+                {
+                    "candidate_ceiling_verdict": receipt["verdict"],
+                    "best_fixed_strategy": receipt["best_fixed_strategy"],
+                    "recall_improvement": receipt["absolute_recall_improvement"],
+                    "missing_queries_recovered_percentage": receipt[
+                        "recovered_missing_query_percentage"
+                    ],
+                    "stage_b1_justified": receipt["stage_b1_justified"],
+                    "stage_a3_justified": receipt["stage_a3_justified"],
                     "test_remained_untouched": receipt["test_remained_untouched"],
                 },
                 ensure_ascii=False,
