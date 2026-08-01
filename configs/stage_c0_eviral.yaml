@@ -1,0 +1,65 @@
+schema_version: 1
+decision_id: QIR-EVIRAL-C0-001
+status: PREREGISTERED_NOT_RUN
+preregistration:
+  path: outputs/stage_c0_preregistration.md
+  sha256: c3d97fa856aec529fe0dff34839c4952f2ea760d11f7e6915458b9e75651361e
+dataset:
+  repository: NIRVLab/EViRAL
+  revision: 138308a5a1c647701b6f47bd7d14c919cd9c38fc
+  license: CC-BY-4.0
+  query_field: query_vi
+  prohibited_query_field: query_ede
+  allowed_assets:
+    corpus/corpus-00000-of-00001.parquet: 210359d579fec0f2a45bcb358fa83a4ef48081f3040f89934d8bc610e5a978d4
+    queries/train-00000-of-00001.parquet: b536f8976901a9bd4136af853416ef14cb9b39e88209dabe71abe22254a3e334
+    qrels/train-00000-of-00001.parquet: b50110e0798d24140ae421bf2ea665f0dc2ac5cb9e004a7443c47c594fd50d1c
+  forbidden_assets:
+    - queries/validation-00000-of-00001.parquet
+    - qrels/validation-00000-of-00001.parquet
+    - queries/test-00000-of-00001.parquet
+    - qrels/test-00000-of-00001.parquet
+  expected_counts:
+    corpus: 123972
+    train_queries: 79700
+    train_qrels: 79700
+    validation_queries: 17078
+    validation_qrels: 17078
+    test_queries: 17079
+    test_qrels: 17079
+partition:
+  calibration_count: 15940
+  fit_count: 63760
+human_audit:
+  samples_per_quartile: 50
+  minimum_supported: 180
+  maximum_non_vietnamese: 10
+retrieval:
+  bm25:
+    k1: 1.5
+    b: 0.75
+    input_top_k: 1000
+  dense:
+    model_id: AITeamVN/Vietnamese_Embedding_v2
+    revision: 18b44161e041bf1d3a333ab5144b5b7b93f914d2
+    dimension: 1024
+    max_sequence_length: 2048
+    input_top_k: 1000
+    exact: true
+    batch_size: 32
+    query_block_size: 32
+    document_block_size: 8192
+    device: auto
+  rrf:
+    k: 60
+    output_top_k: 100
+  lane_tie_break: [rrf, dense, bm25]
+bootstrap:
+  replicates: 10000
+  confidence: 0.95
+  seed: 20260801
+promotion:
+  minimum_recall_at_100: 0.90
+  minimum_bootstrap_lower: 0.88
+cache_root: cache/stage_c0
+output_root: artifacts/stage_c0

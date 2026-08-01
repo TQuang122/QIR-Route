@@ -17,6 +17,11 @@ from qir_route.stage_a import (
     run_stage_a2_confirmation,
     run_stage_a_smoke,
 )
+from qir_route.stage_c0 import (
+    dry_run_stage_c0,
+    run_stage_c0,
+    run_synthetic_stage_c0_smoke,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -73,6 +78,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     provenance.add_argument("--config", type=Path, required=True)
     provenance.add_argument("--output", type=Path, required=True)
+    stage_c0 = subparsers.add_parser(
+        "stage-c0",
+        help="run the preregistered EViRAL data and candidate-ceiling gate",
+    )
+    stage_c0.add_argument("--config", type=Path, required=True)
+    stage_c0.add_argument("--audit-labels", type=Path)
+    stage_c0.add_argument("--dry-run", action="store_true")
+    stage_c0.add_argument("--synthetic-smoke", action="store_true")
     return parser
 
 
@@ -161,6 +174,25 @@ def main() -> None:
             config_path.parent.parent, config, args.output.resolve()
         )
         print(json.dumps(receipt, ensure_ascii=False, indent=2))
+    elif args.command == "stage-c0":
+        if args.dry_run and args.synthetic_smoke:
+            raise SystemExit("choose exactly one of --dry-run or --synthetic-smoke")
+        if args.dry_run:
+            print(
+                json.dumps(dry_run_stage_c0(args.config), ensure_ascii=False, indent=2)
+            )
+        elif args.synthetic_smoke:
+            print(
+                json.dumps(
+                    run_synthetic_stage_c0_smoke(args.config),
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+        else:
+            if args.audit_labels is None:
+                raise SystemExit("full Stage C.0 requires --audit-labels JSONL")
+            print(run_stage_c0(args.config, args.audit_labels))
 
 
 if __name__ == "__main__":
